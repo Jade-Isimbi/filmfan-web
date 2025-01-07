@@ -25,7 +25,6 @@ const Movie = ({ movie, index }) => {
           </Tooltip>
         </Link>
       </Grow>
-
     </Grid>
   );
 };

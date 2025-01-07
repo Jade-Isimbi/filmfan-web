@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { CssBaseline } from '@mui/material';
-import { Route, Routes } from 'react-router-dom'; // For routing
-import Movie from './components/Movie'; // Correct import for Movie component
+import { Route, Switch } from 'react-router-dom';
+import { Movies } from '.';
 import useStyles from './styles';
 
-const App = () => {
+// Define the App component using TypeScript
+const App: React.FC = () => {
   const classes = useStyles();
 
   return (

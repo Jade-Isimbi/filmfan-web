@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { CssBaseline } from '@mui/material';
-import { Route, Switch } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Movies } from '.';
 import useStyles from './styles';
 

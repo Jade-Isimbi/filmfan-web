@@ -9,13 +9,13 @@ export default makeStyles((theme) => ({
     fontWeight: 'bolder',
     textDecoration: 'none',
     // On all devvices that are not mobile devices...
-    [theme.breakpoints.up('xs')]: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    '&:hover': {
-      cursor: 'pointer',
-    },
+    // [theme.breakpoints.up('xs')]: {
+    //   display: 'flex',
+    //   flexDirection: 'column',
+    // },
+    // '&:hover': {
+    //   cursor: 'pointer',
+    // },
   },
   image: {
     borderRadius: '20px',
@@ -26,7 +26,7 @@ export default makeStyles((theme) => ({
     },
   },
   title: {
-    color: theme.palette.text.primary,
+    // color: theme.palette.text.primary,
     textOverflow: 'ellipsis',
     width: '230px',
     whiteSpace: 'nowrap',

@@ -5,28 +5,28 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-around',
     padding: '20px',
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
+    // [theme.breakpoints.down('md')]: {
+    //   flexDirection: 'column',
+    //   alignItems: 'center',
+    // },
   },
   poster: {
-    width: '100%',
-    borderRadius: '10px',
-    boxShadow: theme.shadows[5],
-    [theme.breakpoints.down('sm')]: {
-      width: '70%',
-    },
+    width: '50%',
+    borderRadius: '15px',
+    // boxShadow: theme.shadows[5],
+    // [theme.breakpoints.down('sm')]: {
+    //   width: '70%',
+    // },
   },
   genresContainer: {
     display: 'flex',
     justifyContent: 'center',
     gap: '10px',
     marginBottom: '1rem',
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
+    // [theme.breakpoints.down('sm')]: {
+    //   flexDirection: 'column',
+    //   alignItems: 'center',
+    // },
   },
   genreImage: {
     marginRight: '5px',
@@ -38,24 +38,24 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     textDecoration: 'none',
-    color: theme.palette.text.primary,
-    '&:hover': {
-      color: theme.palette.primary.main,
-    },
+    // color: theme.palette.text.primary,
+    // '&:hover': {
+    //   color: theme.palette.primary.main,
+    // },
   },
   castImage: {
     width: '100%',
     borderRadius: '50%',
-    boxShadow: theme.shadows[2],
+    // boxShadow: theme.shadows[2],
   },
   buttonsContainer: {
     display: 'flex',
     justifyContent: 'space-between',
     marginTop: '1rem',
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-      gap: '10px',
-    },
+    // [theme.breakpoints.down('sm')]: {
+    //   flexDirection: 'column',
+    //   gap: '10px',
+    // },
   },
   modal: {
     display: 'flex',

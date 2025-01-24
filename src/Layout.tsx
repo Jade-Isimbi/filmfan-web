@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 const Layout: React.FC = () => {
   return (
-    <div>
+    <div style={styles.container}>
       <header style={styles.header}>
         <h1 style={styles.logo}>Film Fan</h1>
       </header>
@@ -20,9 +20,15 @@ const Layout: React.FC = () => {
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh',
+    backgroundColor: '#f3f4f6',
+  },
   header: {
-    backgroundColor: '#1f2937', 
-    color: '#f9fafb', 
+    backgroundColor: '#1f2937',
+    color: '#f9fafb',
     padding: '1.5rem',
     textAlign: 'center',
     position: 'sticky',
@@ -36,32 +42,21 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontFamily: '"Poppins", sans-serif',
     fontWeight: 600,
   },
-  nav: {
-    marginTop: '1rem',
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '1.5rem',
-  },
-  link: {
-    color: '#60a5fa', 
-    fontSize: '1.1rem',
-    textDecoration: 'none',
-    fontWeight: 500,
-    fontFamily: '"Roboto", sans-serif',
-    transition: 'color 0.3s ease-in-out',
-  },
-  linkHover: {
-    color: '#93c5fd', 
-  },
   main: {
+    flex: 1,
     padding: '2rem',
-    minHeight: '80vh',
-    backgroundColor: '#f3f4f6', 
+    backgroundColor: '#f9fafb',
     fontFamily: '"Roboto", sans-serif',
     lineHeight: 1.6,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    maxWidth: '1200px', // Restrict content width
+    margin: '0 auto', // Center the content
+    wordWrap: 'break-word', // Break long words to avoid overflow
   },
   footer: {
-    backgroundColor: '#1f2937', 
+    backgroundColor: '#1f2937',
     color: '#f9fafb',
     textAlign: 'center',
     padding: '1rem',

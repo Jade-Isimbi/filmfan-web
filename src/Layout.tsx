@@ -21,6 +21,7 @@ const Layout: React.FC = () => {
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
+    width: "100vw",
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',

@@ -1,21 +1,16 @@
-// src/theme/globalStyles.ts
-import { GlobalStyles } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
-const globalStyles = (
-  <GlobalStyles
-    styles={{
-      body: {
-        margin: 0,
-        padding: 0,
-        backgroundColor: '#f5f5f5',
-        fontFamily: "'Roboto', 'Arial', sans-serif",
-      },
-      a: {
-        textDecoration: 'none',
-        color: 'inherit',
-      },
-    }}
-  />
-);
-
-export default globalStyles;
+export default makeStyles(() => ({
+  root: {
+    display: 'flex',
+    height: '100%',
+  },
+  toolbar: {
+    height: '70px',
+  },
+  content: {
+    flexGrow: '1',
+    padding: '2em',
+    width: '100%',
+  },
+}));

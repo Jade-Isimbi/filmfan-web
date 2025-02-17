@@ -8,7 +8,7 @@ export default makeStyles((theme) => ({
     alignItems: 'center',
     fontWeight: 'bolder',
     textDecoration: 'none',
-    // On all devvices that are not mobile devices...
+    // On all devices that are not mobile devices...
     // [theme.breakpoints.up('xs')]: {
     //   display: 'flex',
     //   flexDirection: 'column',

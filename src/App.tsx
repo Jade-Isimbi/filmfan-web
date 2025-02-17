@@ -1,9 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import AppRoutes from './Route';
-import MovieInformation from './components/MovieInformation/MovieInformation';
-import FavoritesPage from './components/FavoritesPage';
-
+// import { Provider } from 'react-redux';
 
 const App: React.FC = () => {
   return (

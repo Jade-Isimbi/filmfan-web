@@ -7,5 +7,15 @@
     "email": "o@gmail.com",
     "name": "o",
     "password": "$2b$10$VEihiFD6O3r7Ev56.tsFCu81Gs5ZN03f6WoFq8qrfwjjs6Yaw7YlG"
+  },
+  {
+    "email": "a@gmail.com",
+    "name": "angele",
+    "password": "$2b$10$4ZIQv9HaAlI1IPdpMTCyye0972dD4syQhH1ipO0ocUMWIeL.HHnxC"
+  },
+  {
+    "email": "r@gmail.com",
+    "name": "rio",
+    "password": "$2b$10$E9dnhv7aVaRTtJn7NYL0AOSRkaKrBLvFvkK.5qie7SN1XQWDFGGUy"
   }
 ]

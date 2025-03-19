@@ -129,12 +129,7 @@ const MovieInformation: React.FC = () => {
             <Skeleton variant="text" height={20} width="30%" sx={{ mb: 2 }} />
             <Divider sx={{ mb: 1 }} />
             <Skeleton variant="text" height={30} width="30%" sx={{ mb: 1 }} />
-            <Skeleton
-              variant="rectangular"
-              width="215vh"
-              height={100}
-              sx={{ mb: 2 }}
-            />
+            <Skeleton variant="rectangular" height={100} sx={{ mb: 2 }} />
             <Skeleton variant="text" height={30} width="30%" />
           </Grid>
         </Grid>
@@ -258,7 +253,7 @@ const MovieInformation: React.FC = () => {
                 key={member.name}
                 sx={{
                   textAlign: "center",
-                  width: 80,
+                  width: 90,
                   position: "relative",
                 }}
               >
@@ -266,9 +261,9 @@ const MovieInformation: React.FC = () => {
                   alt={member.name}
                   src={`https://image.tmdb.org/t/p/w500${member.profile_path}`}
                   sx={{
-                    width: 70,
-                    height: 70,
-                    borderRadius: "50%",
+                    width: 75,
+                    height: 75,
+                    borderRadius: "75%",
                   }}
                 />
                 <Typography variant="body2" sx={{ mt: 1 }}>
@@ -290,7 +285,7 @@ const MovieInformation: React.FC = () => {
                 <Card>
                   <CardMedia
                     component="img"
-                    height="140"
+                    height="120"
                     image={`https://image.tmdb.org/t/p/w500${similarMovie.poster_path}`}
                     alt={similarMovie.title}
                   />

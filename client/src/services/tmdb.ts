@@ -47,13 +47,7 @@ export const tmdbApi = createApi({
         body,
       }),
     }),
-    // postRating: builder.mutation({
-    //     query: ({ id, rating }) => ({
-    //         url: `/movie/${id}/rating?api_key=${tmdbApiKey}`,
-    //         method: 'POST',
-    //         body: { value: rating },
-    //     }),
-    // }),
+
     postRating: builder.mutation({
       query: ({ id, rating }) => ({
         url: `/movies/${id}/rating`,

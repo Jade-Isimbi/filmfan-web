@@ -5,11 +5,11 @@ const Layout: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const navigate = useNavigate();
+
   useEffect(() => {
     const checkLoginStatus = () => {
-      const user = localStorage.getItem("loggedInUser");
-      setIsLoggedIn(!!user);
-      setUserEmail(user);
+      const userToken = localStorage.getItem("authToken");
+      setIsLoggedIn(!!userToken);
     };
 
     checkLoginStatus();
@@ -22,9 +22,8 @@ const Layout: React.FC = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("authToken");
     setIsLoggedIn(false);
-    setUserEmail(null);
     navigate("/");
   };
 
@@ -75,7 +74,7 @@ const Layout: React.FC = () => {
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
     display: "flex",
-    width: "215vh",
+    width: "100vw",
     flexDirection: "column",
     minHeight: "100vh",
     flex: "wrap",

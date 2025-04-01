@@ -14,12 +14,15 @@ const MovieList: React.FC = () => {
   const { data, error, isLoading } = useGetMovieListQuery(undefined);
   const navigate = useNavigate();
 
+  console.log("====", isLoading);
+
   if (isLoading) return <p>Loading movies...</p>;
   if (error) return <p>Error fetching movies. Please try again.</p>;
 
-
   const movies: MovieType[] = data?.results || [];
-  const sortedMovies = [...movies].sort((a, b) => a.title.localeCompare(b.title));
+  const sortedMovies = [...movies].sort((a, b) =>
+    a.title.localeCompare(b.title)
+  );
 
   const cardStyle: React.CSSProperties = {
     display: "flex",

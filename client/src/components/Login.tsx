@@ -103,7 +103,7 @@ const Login: React.FC = () => {
       <button onClick={handleLogin} style={buttonStyle}>
         Sign In
       </button>
-
+                                  
       <button onClick={() => googleLogin()} style={googleButtonStyle}>
         Sign in with Google 🚀
       </button>
@@ -114,7 +114,7 @@ const Login: React.FC = () => {
 };
 
 const containerStyle: React.CSSProperties = {
-  
+
   width: "400px",
   margin: "auto",
   padding: "2rem",

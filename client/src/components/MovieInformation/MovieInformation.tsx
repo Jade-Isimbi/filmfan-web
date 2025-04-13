@@ -281,13 +281,27 @@ const MovieInformation: React.FC = () => {
           </Typography>
           <Grid container spacing={2}>
             {similar.map((similarMovie) => (
-              <Grid item xs={12} md={4} key={similarMovie.id}>
+              <Grid
+                item
+                xs={12}
+                md={4}
+                key={similarMovie.id}
+                onClick={() => navigate(`/movies/${similarMovie.id}`)}
+              >
                 <Card>
                   <CardMedia
                     component="img"
                     height="120"
                     image={`https://image.tmdb.org/t/p/w500${similarMovie.poster_path}`}
                     alt={similarMovie.title}
+                    sx={{
+                      cursor: "pointer",
+                      mx: "auto",
+                      transition: "transform 0.3s ease-in-out",
+                      "&:hover": {
+                        transform: "scale(1.05)",
+                      },
+                    }}
                   />
                   <CardContent>
                     <Typography variant="h6" component="div">

@@ -1,29 +1,18 @@
-import axiosInstance from "../util/axios.js";
-import pool from "../util/db.js";
-// import User from "../models/users.js";
+import axiosInstance from "../../util/axios.js";
+import { User } from "../models/user.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import express from "express";
+const router = express.Router();
 
-const baseUrl = "https://api.themoviedb.org/3";
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const TOKEN = process.env.TOKEN;
 const SECRET_KEY = process.env.JWT_SECRET;
-const USERS_FILE = "./users.json";
 
 export const getUsers = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM users");
-    res.json(result.rows);
-    console.log("===== users", result.rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-export const getUsersById = async (req, res) => {
-  try {
-    const result = await pool.query("SELECT * FROM users where id=");
-    res.json(result.rows);
-    console.log("===== users", result.rows);
+    const result = await User.findAll();
+    res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -33,7 +22,7 @@ export const getMovies =
   ("/movies",
   async (req, res) => {
     try {
-      const api = axiosInstance(req.headers["authorization"]);
+      const api = axiosInstance(TOKEN);
       const response = await api.get(`/discover/movie`, {
         params: {
           include_adult: false,
@@ -54,7 +43,7 @@ export const getMovies =
 export const getMovieById = async (req, res) => {
   try {
     const { id } = req.params;
-    const api = axiosInstance(req.headers["authorization"]);
+    const api = axiosInstance(TOKEN);
 
     const response = await api.get(`/movie/${id}`, {
       params: { language: "en-US", api_key: TMDB_API_KEY },
@@ -71,7 +60,7 @@ export const getMovieById = async (req, res) => {
 export const getMovieCredits = async (req, res) => {
   try {
     const { id } = req.params;
-    const api = axiosInstance(req.headers["authorization"]);
+    const api = axiosInstance(TOKEN);
 
     const response = await api.get(`/movie/${id}/credits`, {
       params: { language: "en-US", api_key: TMDB_API_KEY },
@@ -88,7 +77,7 @@ export const getMovieCredits = async (req, res) => {
 export const getMovieRecommendations = async (req, res) => {
   try {
     const { id } = req.params;
-    const api = axiosInstance(req.headers["authorization"]);
+    const api = axiosInstance(TOKEN);
 
     const response = await api.get(`/movie/${id}/recommendations`, {
       params: { language: "en-US", api_key: TMDB_API_KEY },
@@ -108,9 +97,17 @@ export const postMovieRating = async (req, res) => {
     const { id } = req.params;
     const { value } = req.body;
 
-    const api = axiosInstance(req.headers["authorization"]);
+    const api = axiosInstance(TOKEN);
 
-    const response = await api.post(`/movie/${id}/rating`, { value });
+    const response = await api.post(
+      `/movie/${id}/rating`,
+      { value },
+      {
+        params: {
+          api_key: TMDB_API_KEY,
+        },
+      }
+    );
 
     res.json(response.data);
   } catch (error) {
@@ -126,13 +123,21 @@ export const toggleFavoriteMovie = async (req, res) => {
     const { id } = req.params;
     const { value } = req.body;
 
-    const api = axiosInstance(req.headers["authorization"]);
+    const api = axiosInstance(TOKEN);
 
-    const response = await api.post(`/account/${id}/favorite`, {
-      media_type: "movie",
-      media_id: id,
-      favorite: value,
-    });
+    const response = await api.post(
+      `/account/${id}/favorite`,
+      {
+        media_type: "movie",
+        media_id: id,
+        favorite: value,
+      },
+      {
+        params: {
+          api_key: TMDB_API_KEY,
+        },
+      }
+    );
 
     res.json(response.data);
   } catch (error) {
@@ -143,16 +148,6 @@ export const toggleFavoriteMovie = async (req, res) => {
   }
 };
 
-// const readUsers = () => {
-//   if (!fs.existsSync(USERS_FILE)) return [];
-//   const data = fs.readFileSync(USERS_FILE, "utf8");
-//   return data ? JSON.parse(data) : [];
-// };
-
-// const writeUsers = (users) => {
-//   fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-// };
-
 export const registerUser = async (req, res) => {
   try {
     const { email, name, password } = req.body;
@@ -161,27 +156,26 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Fill out all credentials" });
     }
 
-    const existingUser = await pool.query(
-      "SELECT * FROM users WHERE email = $1",
-      [email]
-    );
-    if (existingUser.rows.length > 0) {
+    const existingUser = await User.findOne({ where: { email } });
+
+    if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const result = await pool.query(
-      "INSERT INTO users (email, name, password) VALUES ($1, $2, $3) RETURNING *",
-      [email, name, hashedPassword]
-    );
+    const newUser = await User.create({
+      email,
+      name,
+      password: hashedPassword,
+    });
 
     res.status(201).json({
       message: "User registered successfully",
       user: {
-        id: result.rows[0].id,
-        email: result.rows[0].email,
-        name: result.rows[0].name,
+        id: newUser.id,
+        email: newUser.email,
+        name: newUser.name,
       },
     });
   } catch (err) {
@@ -199,14 +193,11 @@ export const loginUser = async (req, res) => {
         .json({ message: "Email and password are required" });
     }
 
-    const result = await pool.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
-    if (result.rows.length === 0) {
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-
-    const user = result.rows[0];
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {

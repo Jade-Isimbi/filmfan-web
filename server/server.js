@@ -3,11 +3,11 @@ import fs from "fs";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import axios from "axios";
-import routes from "./routes/index.js";
+import routes from "./src/routes/index.js";
+import { connectToDatabase } from "./util/db.js";
 
 const app = express();
 const PORT = 3002;
-
 
 const baseUrl = "https://api.themoviedb.org/3";
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
@@ -26,7 +26,6 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST");
-  res.setHeader("Authorization", `Bearer ${TOKEN}`);
   res.setHeader(
     "Access-Control-Allow-Headers",
     "X-Requested-With,content-type, Authorization"
@@ -34,10 +33,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(("/", routes));
+app.use(("/api", routes));
 
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-);
+const start = async () => {
+  await connectToDatabase();
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+start();
 
 export default app;

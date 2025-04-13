@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const tmdbApiKey = import.meta.env.VITE_TMDB_API_KEY;
-const tmdbApiToken = import.meta.env.VITE_TOKEN;
+const Token = import.meta.env.VITE_TOKEN;
+const tmdbApiToken = import.meta.env.VITE_TMDB_TOKEN;
 
 export const tmdbApi = createApi({
   reducerPath: "tmdbApi",
@@ -9,7 +10,7 @@ export const tmdbApi = createApi({
     baseUrl: "http://localhost:3002",
     prepareHeaders: (headers) => {
       headers.set("content-type", "application/json");
-      headers.set("authorization", `Bearer ${tmdbApiToken}`);
+      headers.set("authorization", `Bearer ${Token}`);
       return headers;
     },
   }),

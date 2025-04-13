@@ -1,16 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGoogleLogin, googleLogout } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useLoginUserMutation } from "../services/tmdb";
+import { useDispatch } from "react-redux";
+import { setIsAuthenticated} from "../slices/auth";
+import {
+  Box,
+  Button,
+  Typography,
+  TextField,
+  Link,
+  Divider,
+} from "@mui/material";
+import GoogleIcon from "@mui/icons-material/Google";
 
 const Login: React.FC = () => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  const [loginUser, { isLoading, error }] = useLoginUserMutation();
+  const [loginUser, { isLoading }] = useLoginUserMutation();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,12 +35,19 @@ const Login: React.FC = () => {
     try {
       const response = await loginUser({ email, password }).unwrap();
       setMessage("Login successful!");
-      console.log("====>>", response);
 
+      console.log(">>>>>", response);
       if (response.token) {
         localStorage.setItem("authToken", response.token);
+        localStorage.setItem("loggedInUser", response.user.email);
       }
 
+      dispatch(setIsAuthenticated({
+        name: response.user.name,
+        email: response.user.email,
+        token: response.token
+      }));
+      
       setTimeout(() => navigate("/"), 1000);
     } catch (err) {
       let errorMessage = "Login failed. Please check your credentials.";
@@ -52,11 +71,6 @@ const Login: React.FC = () => {
   };
 
   const [user, setUser] = useState<{ access_token: string } | null>(null);
-  const [profile, setProfile] = useState<{
-    name: string;
-    email: string;
-    picture: string;
-  } | null>(null);
 
   const googleLogin = useGoogleLogin({
     onSuccess: (response) => setUser(response),
@@ -73,7 +87,6 @@ const Login: React.FC = () => {
           },
         })
         .then((res) => {
-          setProfile(res.data);
           localStorage.setItem("authToken", user.access_token);
           setMessage("Login successful!");
           setTimeout(() => navigate("/"), 1000);
@@ -83,107 +96,115 @@ const Login: React.FC = () => {
   }, [user, navigate]);
 
   return (
-    <div style={containerStyle}>
-      <h2 style={titleStyle}>Login</h2>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        width: "100vw",
+        overflow: "hidden",
+        backgroundColor: "#f4f4f4",
+      }}
+    >
+      <Box
+        sx={{
+          width: 400,
+          p: 4,
+          backgroundColor: "#fff",
+          borderRadius: 3,
+          boxShadow: 5,
+        }}
+      >
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          gutterBottom
+          align="center"
+          color="primary"
+        >
+          Welcome to Film Fan
+        </Typography>
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        style={inputStyle}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        style={inputStyle}
-      />
-      <button onClick={handleLogin} style={buttonStyle}>
-        Sign In
-      </button>
-                                  
-      <button onClick={() => googleLogin()} style={googleButtonStyle}>
-        Sign in with Google 🚀
-      </button>
+        <Typography variant="h5" fontWeight="bold" gutterBottom align="center">
+          Login
+        </Typography>
 
-      {message && <p style={messageStyle}>{message}</p>}
-    </div>
+        <Box component="form" onSubmit={handleLogin}>
+          <TextField
+            fullWidth
+            label="Email"
+            type="email"
+            margin="normal"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+
+          <TextField
+            fullWidth
+            label="Password"
+            type="password"
+            margin="normal"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2, mb: 1 }}
+            disabled={isLoading}
+          >
+            Sign In
+          </Button>
+        </Box>
+
+        <Divider sx={{ my: 2 }}>OR</Divider>
+
+        <Button
+          fullWidth
+          variant="outlined"
+          startIcon={<GoogleIcon />}
+          onClick={() => googleLogin()}
+          sx={{
+            backgroundColor: "#fff",
+            textTransform: "none",
+            "&:hover": {
+              backgroundColor: "#f5f5f5",
+            },
+          }}
+        >
+          Sign in with Google
+        </Button>
+
+        <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+          Don’t have an account?{" "}
+          <Link href="/registration" underline="hover" color="primary">
+            Sign Up
+          </Link>
+        </Typography>
+
+        {message && (
+          <Typography
+            variant="body2"
+            color={
+              message.toLowerCase().includes("success")
+                ? "success.main"
+                : "error"
+            }
+            align="center"
+            sx={{ mt: 2 }}
+          >
+            {message}
+          </Typography>
+        )}
+      </Box>
+    </Box>
   );
-};
-
-const containerStyle: React.CSSProperties = {
-
-  width: "400px",
-  margin: "auto",
-  padding: "2rem",
-  textAlign: "center",
-  backgroundColor: "#ffffff",
-  borderRadius: "8px",
-  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-};
-
-const titleStyle: React.CSSProperties = {
-  fontSize: "1.5rem",
-  fontWeight: "bold",
-  color: "#333",
-  marginBottom: "1.5rem",
-};
-
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "0.75rem",
-  margin: "0.5rem 0",
-  border: "1px solid #ddd",
-  borderRadius: "4px",
-  fontSize: "1rem",
-  outline: "none",
-  transition: "border-color 0.3s, box-shadow 0.3s",
-};
-
-const buttonStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "0.75rem",
-  backgroundColor: "#007bff",
-  color: "#fff",
-  border: "none",
-  borderRadius: "4px",
-  fontSize: "1rem",
-  fontWeight: "bold",
-  cursor: "pointer",
-  transition: "background-color 0.3s, transform 0.2s",
-  marginBottom: "10px",
-};
-
-const googleButtonStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "0.75rem",
-  backgroundColor: "#ffffff",
-  color: "#757575",
-  border: "1px solid #ddd",
-  borderRadius: "8px",
-  fontSize: "1rem",
-  fontWeight: "bold",
-  cursor: "pointer",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: "10px",
-  transition: "background-color 0.3s, transform 0.2s, box-shadow 0.2s",
-  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-};
-
-const googleButtonHoverStyle: React.CSSProperties = {
-  backgroundColor: "#f5f5f5",
-  transform: "scale(1.02)",
-  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.15)",
-};
-
-const messageStyle: React.CSSProperties = {
-  marginTop: "1rem",
-  color: "#28a745",
-  fontSize: "0.9rem",
 };
 
 export default Login;

@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { tmdbApi } from "./tmdb";
+import userSlice from "../slices/auth";
 
 export const store = configureStore({
   reducer: {
     [tmdbApi.reducerPath]: tmdbApi.reducer,
+    user: userSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(tmdbApi.middleware),

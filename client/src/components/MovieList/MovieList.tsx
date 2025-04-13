@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useGetMovieListQuery } from "../../services/tmdb";
+import { handleError } from "../../util/globals";
 
 interface MovieType {
   id: number;
@@ -11,10 +12,14 @@ interface MovieType {
 }
 
 const MovieList: React.FC = () => {
-  const { data, error, isLoading } = useGetMovieListQuery(undefined);
   const navigate = useNavigate();
+  const { data, error, isError, isLoading } = useGetMovieListQuery(undefined);
 
-  console.log("====", isLoading);
+  useEffect(() => {
+    if (isError) {
+      handleError(error);
+    }
+  }, [isError]);
 
   if (isLoading) return <p>Loading movies...</p>;
   if (error) return <p>Error fetching movies. Please try again.</p>;
@@ -24,54 +29,9 @@ const MovieList: React.FC = () => {
     a.title.localeCompare(b.title)
   );
 
-  const cardStyle: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-    height: "450px",
-    width: "260px",
-    borderRadius: "10px",
-    overflow: "hidden",
-    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-    padding: "10px",
-    backgroundColor: "#fff",
-    transition: "transform 0.3s ease-in-out",
-    cursor: "pointer",
-  };
-
-  const moviePosterStyle: React.CSSProperties = {
-    width: "100%",
-    height: "350px",
-    objectFit: "cover",
-    borderRadius: "8px",
-  };
-
-  const movieTitleStyle: React.CSSProperties = {
-    fontWeight: "bold",
-    fontSize: "16px",
-    marginTop: "10px",
-    textAlign: "center",
-    overflow: "hidden",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    maxWidth: "100%",
-  };
-
-  const movieOverviewStyle: React.CSSProperties = {
-    fontSize: "14px",
-    color: "#666",
-    textAlign: "justify",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    display: "-webkit-box",
-    WebkitLineClamp: 3,
-    WebkitBoxOrient: "vertical",
-  };
-
   return (
-    <Box sx={{ padding: "20px" }}>
-      <Grid container spacing={3}>
+    <Box sx={{ p: 3 }}>
+      <Grid container spacing={5}>
         {sortedMovies.map((movie) => (
           <Grid
             item
@@ -82,16 +42,70 @@ const MovieList: React.FC = () => {
             key={movie.id}
             onClick={() => navigate(`/movies/${movie.id}`)}
           >
-            <Box style={cardStyle}>
-              <img
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                alignItems: "center",
+                height: 450,
+                width: "100%",
+
+                borderRadius: 2,
+                overflow: "hidden",
+
+                boxShadow: 3,
+                p: 2,
+                bgcolor: "#fff", //'grey.900',
+                transition: "transform 0.3s",
+
+                cursor: "pointer",
+                mx: "auto",
+
+                "&:hover": {
+                  transform: "scale(1.05)",
+                },
+              }}
+            >
+              <Box
+                component="img"
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={movie.title}
-                style={moviePosterStyle}
+                sx={{
+                  width: "100%",
+                  height: 350,
+                  objectFit: "cover",
+                  borderRadius: 1.5,
+                }}
               />
-              <Typography variant="h6" style={movieTitleStyle}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  mt: 1,
+                  textAlign: "center",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  maxWidth: "100%",
+                }}
+              >
                 {movie.title}
               </Typography>
-              <Typography variant="body2" style={movieOverviewStyle}>
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: 14,
+                  color: "text.secondary",
+                  textAlign: "justify",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 3,
+                  WebkitBoxOrient: "vertical",
+                }}
+              >
                 {movie.overview}
               </Typography>
             </Box>

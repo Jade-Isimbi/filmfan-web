@@ -147,6 +147,27 @@ export const toggleFavoriteMovie = async (req, res) => {
     });
   }
 };
+export const getFavorites =
+  ("/favorites",
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const api = axiosInstance(TOKEN);
+      const response = await api.get(`/account/${id}/favorite/movies`, {
+        params: {
+          language: "en-US",
+          page: 1,
+          sort_by: "created_at.asc",
+          api_key: TMDB_API_KEY,
+        },
+      });
+      res.json(response.data);
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Error fetching favorites", error: error.message });
+    }
+  });
 
 export const registerUser = async (req, res) => {
   try {

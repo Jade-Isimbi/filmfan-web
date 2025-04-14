@@ -4,7 +4,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useLoginUserMutation } from "../services/tmdb";
 import { useDispatch } from "react-redux";
-import { setIsAuthenticated} from "../slices/auth";
+import { setIsAuthenticated } from "../slices/auth";
 import {
   Box,
   Button,
@@ -36,18 +36,14 @@ const Login: React.FC = () => {
       const response = await loginUser({ email, password }).unwrap();
       setMessage("Login successful!");
 
-      console.log(">>>>>", response);
-      if (response.token) {
-        localStorage.setItem("authToken", response.token);
-        localStorage.setItem("loggedInUser", response.user.email);
-      }
+      dispatch(
+        setIsAuthenticated({
+          name: response.user.name,
+          email: response.user.email,
+          token: response.token,
+        })
+      );
 
-      dispatch(setIsAuthenticated({
-        name: response.user.name,
-        email: response.user.email,
-        token: response.token
-      }));
-      
       setTimeout(() => navigate("/"), 1000);
     } catch (err) {
       let errorMessage = "Login failed. Please check your credentials.";
@@ -70,30 +66,30 @@ const Login: React.FC = () => {
     }
   };
 
-  const [user, setUser] = useState<{ access_token: string } | null>(null);
+  // const [user, setUser] = useState<{ access_token: string } | null>(null);
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: (response) => setUser(response),
-    onError: (error) => console.log("Google Login Failed:", error),
-  });
+  // const googleLogin = useGoogleLogin({
+  //   onSuccess: (response) => setUser(response),
+  //   onError: (error) => console.log("Google Login Failed:", error),
+  // });
 
-  useEffect(() => {
-    if (user?.access_token) {
-      axios
-        .get("https://www.googleapis.com/oauth2/v1/userinfo", {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-            Accept: "application/json",
-          },
-        })
-        .then((res) => {
-          localStorage.setItem("authToken", user.access_token);
-          setMessage("Login successful!");
-          setTimeout(() => navigate("/"), 1000);
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [user, navigate]);
+  // useEffect(() => {
+  //   if (user?.access_token) {
+  //     axios
+  //       .get("https://www.googleapis.com/oauth2/v1/userinfo", {
+  //         headers: {
+  //           Authorization: `Bearer ${user.access_token}`,
+  //           Accept: "application/json",
+  //         },
+  //       })
+  //       .then((res) => {
+  //         localStorage.setItem("authToken", user.access_token);
+  //         setMessage("Login successful!");
+  //         setTimeout(() => navigate("/"), 1000);
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }
+  // }, [user, navigate]);
 
   return (
     <Box
@@ -165,7 +161,7 @@ const Login: React.FC = () => {
 
         <Divider sx={{ my: 2 }}>OR</Divider>
 
-        <Button
+        {/* <Button
           fullWidth
           variant="outlined"
           startIcon={<GoogleIcon />}
@@ -179,7 +175,7 @@ const Login: React.FC = () => {
           }}
         >
           Sign in with Google
-        </Button>
+        </Button> */}
 
         <Typography variant="body2" align="center" sx={{ mt: 2 }}>
           Don’t have an account?{" "}

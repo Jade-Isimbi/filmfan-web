@@ -8,6 +8,7 @@ import {
   getMovieRecommendations,
   postMovieRating,
   toggleFavoriteMovie,
+  getFavorites,
   registerUser,
   loginUser,
 } from "../controllers/index.js";
@@ -22,6 +23,7 @@ router.get("/movies/:id/credits", verifyToken, getMovieCredits);
 router.get("/movies/:id/recommendations", verifyToken, getMovieRecommendations);
 router.post("/movies/:id/rating", verifyToken, postMovieRating);
 router.post("/movies/:id/favorites", verifyToken, toggleFavoriteMovie);
+router.get("/favorites",verifyToken,getFavorites);
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 

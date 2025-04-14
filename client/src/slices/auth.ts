@@ -23,7 +23,10 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setIsAuthenticated: (state, action: PayloadAction<{ name: string; email?: string; token: string }>) => {
+    setIsAuthenticated: (
+      state,
+      action: PayloadAction<{ name: string; email?: string; token: string }>
+    ) => {
       const { name, email, token } = action.payload;
       state.user = {
         name,
@@ -35,14 +38,12 @@ const userSlice = createSlice({
       localStorage.setItem("token", token);
     },
     logout: (state) => {
+      console.log("LOGOUT REDUCER FIRED");
       state.user = {
         name: "",
         email: "",
         isAuthenticated: false,
       };
-      localStorage.removeItem("name");
-      localStorage.removeItem("email");
-      localStorage.removeItem("token");
     },
   },
 });

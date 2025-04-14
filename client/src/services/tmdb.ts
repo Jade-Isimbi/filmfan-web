@@ -1,8 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const tmdbApiKey = import.meta.env.VITE_TMDB_API_KEY;
 const Token = import.meta.env.VITE_TOKEN;
-const tmdbApiToken = import.meta.env.VITE_TMDB_TOKEN;
 
 export const tmdbApi = createApi({
   reducerPath: "tmdbApi",
@@ -26,6 +24,9 @@ export const tmdbApi = createApi({
     }),
     getMovieList: builder.query({
       query: () => "/movies",
+    }),
+    getFavorites: builder.query({
+      query: (id) => `/favorites`,
     }),
     registerUser: builder.mutation({
       query: (body) => ({
@@ -68,7 +69,6 @@ export const tmdbApi = createApi({
 
 export const {
   useGetMovieQuery,
-  useLazyGetMovieQuery,
   useGetCreditsQuery,
   useGetSimilarMoviesQuery,
   useGetMovieListQuery,
@@ -76,4 +76,5 @@ export const {
   usePostFavoriteMutation,
   useRegisterUserMutation,
   useLoginUserMutation,
+  useGetFavoritesQuery,
 } = tmdbApi;

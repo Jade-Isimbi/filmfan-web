@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { RootState } from "../services/mystore";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../slices/auth";
 
 const Layout: React.FC = () => {
   const { user: authUser } = useSelector((state: RootState) => state.user);
+  const { name, email, isAuthenticated } = useSelector(
+    (state: RootState) => state.user.user
+  );
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const [userEmail, setUserEmail] = useState<string | null>(null);
-  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    setIsLoggedIn(false);
-    navigate("/login");
-  };
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const userEmail = localStorage.getItem("loggedInUser");
 
   console.log("=======", authUser);
+
+  const handleLogout = () => {
+    localStorage.removeItem("name");
+    localStorage.removeItem("email");
+    localStorage.removeItem("token");
+    dispatch(logout());
+    navigate("/login");
+  };
 
   return (
     <div style={styles.container}>
@@ -28,28 +35,20 @@ const Layout: React.FC = () => {
           <Link to="/" style={styles.navLink} aria-label="Home">
             Home
           </Link>
+          <Link
+            to="/favorites"
+            style={styles.navLink}
+            aria-label="My Favorites"
+          >
+            My Favorites
+          </Link>
 
-          {!authUser?.isAuthenticated ? (
-            <>
-              <Link to="/login" style={styles.navLink} aria-label="Login">
-                Login
-              </Link>
-              <Link
-                to="/registration"
-                style={styles.navLink}
-                aria-label="Registration"
-              >
-                Sign Up
-              </Link>
-            </>
-          ) : (
-            <>
-              <span style={styles.userEmail}>{userEmail}</span>
-              <button onClick={handleLogout} style={styles.logoutButton}>
-                Logout
-              </button>
-            </>
-          )}
+          <>
+            {isAuthenticated && <span style={styles.userEmail}>{email}</span>}
+            <button onClick={handleLogout} style={styles.logoutButton}>
+              Logout
+            </button>
+          </>
         </nav>
       </header>
 

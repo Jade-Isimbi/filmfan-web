@@ -10,7 +10,7 @@ const Layout: React.FC = () => {
     (state: RootState) => state.user.user
   );
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+ 
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -69,6 +69,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     width: "100vw",
     flexDirection: "column",
     minHeight: "100vh",
+    padding: 0,
+    margin: 0,
 
     backgroundColor: "#f3f4f6",
   },

@@ -38,7 +38,6 @@ const userSlice = createSlice({
       localStorage.setItem("token", token);
     },
     logout: (state) => {
-      console.log("LOGOUT REDUCER FIRED");
       state.user = {
         name: "",
         email: "",
